@@ -295,10 +295,7 @@ fn execute_multi_leg_atomic() {
         assert_ok!(CrossSettlement::propose_cross_settlement(
             RawOrigin::Signed(op1_acc).into(),
             participants(&[op1_id, op2_id]),
-            legs(vec![
-                (asset_id, 10, 20, 300),
-                (asset_id, 20, 10, 150),
-            ]),
+            legs(vec![(asset_id, 10, 20, 300), (asset_id, 20, 10, 150),]),
             100,
             bvec(b"SWAP"),
         ));
@@ -315,7 +312,7 @@ fn execute_multi_leg_atomic() {
 
         let bal_10 = pallet_settlement_engine::pallet::AccountBalances::<Test>::get(10, asset_id);
         let bal_20 = pallet_settlement_engine::pallet::AccountBalances::<Test>::get(20, asset_id);
-        assert_eq!(bal_10, 850);  // 1000 - 300 + 150
+        assert_eq!(bal_10, 850); // 1000 - 300 + 150
         assert_eq!(bal_20, 1150); // 1000 + 300 - 150
     });
 }
@@ -558,10 +555,9 @@ fn events_emitted() {
             })
             .collect();
 
-        assert!(types.iter().any(|e| matches!(
-            e,
-            crate::pallet::Event::CrossSettlementProposed(0, _)
-        )));
+        assert!(types
+            .iter()
+            .any(|e| matches!(e, crate::pallet::Event::CrossSettlementProposed(0, _))));
         assert!(types
             .iter()
             .any(|e| matches!(e, crate::pallet::Event::CrossSettlementApproved(0))));

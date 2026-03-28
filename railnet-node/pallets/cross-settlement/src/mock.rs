@@ -105,7 +105,13 @@ pub fn register_asset(account: u64) -> u32 {
 }
 
 /// Issue `amount` of `asset_id` to `to_account` via `operator_account`.
-pub fn issue_balance(operator_account: u64, operator_id: u32, asset_id: u32, to: u64, amount: u128) {
+pub fn issue_balance(
+    operator_account: u64,
+    operator_id: u32,
+    asset_id: u32,
+    to: u64,
+    amount: u128,
+) {
     pallet_settlement_engine::pallet::Pallet::<Test>::submit_settlement(
         frame_system::RawOrigin::Signed(operator_account).into(),
         operator_id,
@@ -117,8 +123,7 @@ pub fn issue_balance(operator_account: u64, operator_id: u32, asset_id: u32, to:
         BoundedVec::try_from(b"ISSUE".to_vec()).unwrap(),
     )
     .unwrap();
-    let s_id =
-        pallet_settlement_engine::pallet::NextSettlementId::<Test>::get().saturating_sub(1);
+    let s_id = pallet_settlement_engine::pallet::NextSettlementId::<Test>::get().saturating_sub(1);
     pallet_settlement_engine::pallet::Pallet::<Test>::finalize_settlement(
         frame_system::RawOrigin::Root.into(),
         s_id,
@@ -134,9 +139,7 @@ pub fn participants(ids: &[u32]) -> BoundedVec<u32, ConstU32<10>> {
     BoundedVec::try_from(ids.to_vec()).unwrap()
 }
 
-pub fn legs(
-    v: Vec<(u32, u64, u64, u128)>,
-) -> BoundedVec<crate::pallet::Leg<Test>, ConstU32<20>> {
+pub fn legs(v: Vec<(u32, u64, u64, u128)>) -> BoundedVec<crate::pallet::Leg<Test>, ConstU32<20>> {
     BoundedVec::try_from(
         v.into_iter()
             .map(|(asset_id, from, to, amount)| crate::pallet::Leg::<Test> {

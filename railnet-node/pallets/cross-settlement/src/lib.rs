@@ -232,7 +232,10 @@ pub mod pallet {
                     info.participants.contains(&operator_id),
                     Error::<T>::NotAParticipant
                 );
-                ensure!(!info.approvals.contains(&operator_id), Error::<T>::AlreadyApproved);
+                ensure!(
+                    !info.approvals.contains(&operator_id),
+                    Error::<T>::AlreadyApproved
+                );
 
                 info.approvals
                     .try_push(operator_id)
