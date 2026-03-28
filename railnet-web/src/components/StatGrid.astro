@@ -1,0 +1,18 @@
+---
+const stats = [
+  { value: "Private", label: "Permissioned network controls" },
+  { value: "Auditable", label: "Traceable actions and outcomes" },
+  { value: "API-first", label: "Designed for integration" }
+];
+---
+
+<section class="mx-auto max-w-6xl px-5">
+  <div class="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 md:grid-cols-3">
+    {stats.map((s) => (
+      <div class="rounded-xl border border-white/10 bg-rail-950/40 p-5">
+        <div class="text-3xl font-semibold tracking-tight">{s.value}</div>
+        <div class="mt-1 text-sm text-white/65">{s.label}</div>
+      </div>
+    ))}
+  </div>
+</section>

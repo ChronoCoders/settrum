@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-rail-950 text-white antialiased;
+}
+
+a {
+  @apply text-white/90 hover:text-white;
+}

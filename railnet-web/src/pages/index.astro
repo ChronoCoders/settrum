@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import StatGrid from "../components/StatGrid.astro";
+import Section from "../components/Section.astro";
+import Card from "../components/Card.astro";
+import LogoStrip from "../components/LogoStrip.astro";
+import CTA from "../components/CTA.astro";
+---
+
+<BaseLayout
+  title="Railnet — Digital settlement rails"
+  description="Railnet is settlement infrastructure for regulated institutions: a private Substrate blockchain with a REST API."
+>
+  <Hero />
+  <div class="py-10">
+    <StatGrid />
+  </div>
+
+  <Section
+    id="overview"
+    eyebrow="WHY RAILNET"
+    title="Built to modernize settlement without breaking compliance"
+    subtitle="A private network that helps institutions coordinate participants and processes while keeping controls, auditability, and clarity."
+  >
+    <div class="grid gap-5 md:grid-cols-3">
+      <Card
+        title="Institutional onboarding"
+        body="Define participants, roles, and permissions in a controlled environment designed for real operations."
+      >
+        <div class="text-xs text-white/55">Operators and governance</div>
+      </Card>
+
+      <Card
+        title="Asset definitions"
+        body="Register assets with clear metadata and rules so every participant settles on the same terms."
+      >
+        <div class="text-xs text-white/55">Registry and lifecycle</div>
+      </Card>
+
+      <Card
+        title="Settlements and proofs"
+        body="Coordinate settlement actions and attach proof artifacts for audit and compliance workflows."
+      >
+        <div class="text-xs text-white/55">Execution and audit trails</div>
+      </Card>
+    </div>
+
+    <div class="mt-8">
+      <LogoStrip />
+    </div>
+  </Section>
+
+  <Section
+    id="how"
+    eyebrow="HOW IT WORKS"
+    title="Three simple layers"
+    subtitle="Keep the network clean and predictable: define participants, define assets, and run settlement workflows."
+  >
+    <div class="grid gap-5 md:grid-cols-3">
+      <Card title="1. Participants" body="Onboard operators and define permissions for each workflow.">
+        <a href="/solutions" class="text-sm font-semibold text-white hover:text-white/90">Explore use cases</a>
+      </Card>
+      <Card title="2. Assets" body="Register assets and settlement rules so everyone agrees on the terms.">
+        <a href="/solutions" class="text-sm font-semibold text-white hover:text-white/90">See asset workflows</a>
+      </Card>
+      <Card title="3. Settlement" body="Execute settlement actions and attach proofs for compliance and audit.">
+        <a href="/technology" class="text-sm font-semibold text-white hover:text-white/90">How it works</a>
+      </Card>
+    </div>
+  </Section>
+
+  <section class="mx-auto max-w-6xl px-5 pb-20 md:pb-28">
+    <CTA
+      title="Build settlement workflows on Railnet"
+      body="If you’re exploring private-market infrastructure, we can walk through your workflow, constraints, and rollout plan."
+    />
+  </section>
+</BaseLayout>

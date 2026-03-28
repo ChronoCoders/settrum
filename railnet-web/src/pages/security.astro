@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import Card from "../components/Card.astro";
+import CTA from "../components/CTA.astro";
+---
+
+<BaseLayout
+  title="Railnet — Security"
+  description="Security and quality standards for Railnet: deterministic execution, bounded state, and production-grade engineering discipline."
+>
+  <Section
+    id="top"
+    eyebrow="SECURITY"
+    title="Trust built into the system"
+    subtitle="Railnet is designed for regulated environments where auditability, clarity, and controlled access matter."
+  >
+    <div class="grid gap-5 md:grid-cols-3">
+      <Card
+        title="Audit trails"
+        body="Operational changes are traceable: who acted, what changed, and what the outcome was."
+      />
+      <Card
+        title="Controlled access"
+        body="Private networks and permissioned workflows help keep settlement operations inside defined boundaries."
+      />
+      <Card
+        title="Predictable constraints"
+        body="Bounded data structures and explicit rules keep execution predictable under load."
+      />
+    </div>
+
+    <div class="mt-8 grid gap-5 md:grid-cols-2">
+      <Card
+        title="Deterministic execution"
+        body="Consistent outcomes across participants help reduce disputes and reconciliation overhead."
+      />
+      <Card
+        title="Production discipline"
+        body="Strict quality gates support a clean and maintainable system from day one."
+      />
+    </div>
+  </Section>
+
+  <section class="mx-auto max-w-6xl px-5 pb-20 md:pb-28">
+    <CTA
+      title="Review security assumptions"
+      body="We can share our threat model, operational boundaries, and deployment posture for private networks."
+    />
+  </section>
+</BaseLayout>

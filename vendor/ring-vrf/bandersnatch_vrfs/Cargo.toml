@@ -1,0 +1,14 @@
+[package]
+name = "bandersnatch_vrfs"
+version = "0.0.4"
+edition = "2021"
+
+[lib]
+name = "bandersnatch_vrfs"
+path = "src/lib.rs"
+crate-type = ["rlib"]
+
+[features]
+default = ["std"]
+std = []
+substrate-curves = []

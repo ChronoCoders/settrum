@@ -1,0 +1,210 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database with production settings
+  db:
+    image: postgres:15-alpine
+    container_name: railnet-db-prod
+    environment:
+      POSTGRES_DB: railnet
+      POSTGRES_USER: railnet
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      - railnet-db-data:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U railnet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - railnet-internal
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+
+  # Railnet Validator Node 1
+  node-01:
+    image: registry.example.com/railnet-node:1.0.0
+    container_name: railnet-node-01
+    command:
+      - "--chain=production"
+      - "--validator"
+      - "--name=Validator-01"
+      - "--base-path=/data"
+      - "--rpc-port=9944"
+      - "--port=30333"
+      - "--rpc-cors=http://localhost:8080"
+      - "--prometheus-external"
+      - "--prometheus-port=9615"
+    volumes:
+      - railnet-node-01-data:/data
+      - ./chain-spec.json:/chain-spec.json:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9944/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - railnet-internal
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 16G
+        reservations:
+          cpus: '4'
+          memory: 8G
+
+  # Railnet API Server
+  api:
+    image: registry.example.com/railnet-api:1.0.0
+    container_name: railnet-api-prod
+    environment:
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8080
+      DATABASE_URL_FILE: /run/secrets/database_url
+      CHAIN_RPC_URL: ws://node-01:9944
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      ADMIN_API_KEY_FILE: /run/secrets/admin_api_key
+      ADMIN_SEED_FILE: /run/secrets/admin_seed
+      JWT_EXPIRATION: 86400
+      RATE_LIMIT_REQUESTS: 100
+      RATE_LIMIT_WINDOW_SECONDS: 60
+      RUST_LOG: info
+    secrets:
+      - database_url
+      - jwt_secret
+      - admin_api_key
+      - admin_seed
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      node-01:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/api/v1/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - railnet-internal
+      - railnet-external
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+
+  # Nginx reverse proxy with TLS
+  nginx:
+    image: nginx:alpine
+    container_name: railnet-nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - nginx-cache:/var/cache/nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      - railnet-external
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+
+  # Prometheus for metrics
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: railnet-prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    restart: unless-stopped
+    networks:
+      - railnet-internal
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+
+  # Grafana for dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: railnet-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD_FILE: /run/secrets/grafana_password
+    secrets:
+      - grafana_password
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    restart: unless-stopped
+    networks:
+      - railnet-internal
+      - railnet-external
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+secrets:
+  db_password:
+    external: true
+  database_url:
+    external: true
+  jwt_secret:
+    external: true
+  admin_api_key:
+    external: true
+  admin_seed:
+    external: true
+  grafana_password:
+    external: true
+
+volumes:
+  railnet-db-data:
+    driver: local
+  railnet-node-01-data:
+    driver: local
+  nginx-cache:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  railnet-internal:
+    driver: bridge
+    internal: true
+  railnet-external:
+    driver: bridge

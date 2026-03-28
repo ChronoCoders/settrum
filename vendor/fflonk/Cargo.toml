@@ -1,0 +1,13 @@
+[package]
+name = "fflonk"
+version = "0.0.1"
+edition = "2021"
+
+[lib]
+name = "fflonk"
+path = "src/lib.rs"
+crate-type = ["rlib"]
+
+[features]
+default = ["std"]
+std = []

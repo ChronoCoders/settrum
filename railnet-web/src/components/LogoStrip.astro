@@ -1,0 +1,14 @@
+---
+const logos = ["Bank", "Custodian", "Broker", "Market Infra", "Fintech"];
+---
+
+<div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+  <div class="text-xs font-semibold tracking-widest text-white/60">TRUSTED BY</div>
+  <div class="mt-5 grid grid-cols-2 gap-4 text-sm text-white/60 md:grid-cols-5">
+    {logos.map((l) => (
+      <div class="flex items-center justify-center rounded-xl border border-white/10 bg-rail-950/40 px-4 py-3">
+        {l}
+      </div>
+    ))}
+  </div>
+</div>

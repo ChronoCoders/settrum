@@ -1,0 +1,56 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import Card from "../components/Card.astro";
+import CTA from "../components/CTA.astro";
+---
+
+<BaseLayout
+  title="Railnet — Technology"
+  description="Railnet technology: private Substrate chain (Aura + GRANDPA) plus a REST API integration layer."
+>
+  <Section
+    id="top"
+    eyebrow="TECHNOLOGY"
+    title="A modern settlement stack, without unnecessary complexity"
+    subtitle="Railnet keeps the system simple: a private network for shared truth, and an API layer for enterprise integration."
+  >
+    <div class="grid gap-5 md:grid-cols-2">
+      <Card
+        title="Private network"
+        body="A controlled environment where participant actions are recorded, rules are enforced, and state stays consistent."
+      >
+        <div class="text-xs text-white/55">Operational clarity and predictable execution.</div>
+      </Card>
+
+      <Card
+        title="Integration API"
+        body="Connect existing systems to onboarding, asset definitions, settlement workflows, and reporting."
+      >
+        <div class="text-xs text-white/55">Authentication, rate limiting, and clean interfaces.</div>
+      </Card>
+    </div>
+
+    <div class="mt-8 grid gap-5 md:grid-cols-3">
+      <Card
+        title="Designed for rollout"
+        body="Start with a small set of participants and expand as workflows stabilize."
+      />
+      <Card
+        title="Shared source of truth"
+        body="Participants see the same rules and the same outcomes—reducing reconciliation overhead."
+      />
+      <Card
+        title="Clear operations"
+        body="Every action produces traceable records suitable for audit and compliance workflows."
+      />
+    </div>
+  </Section>
+
+  <section class="mx-auto max-w-6xl px-5 pb-20 md:pb-28">
+    <CTA
+      title="Get a technical walkthrough"
+      body="We can cover consensus assumptions, runtime primitives, and integration patterns for your environment."
+    />
+  </section>
+</BaseLayout>

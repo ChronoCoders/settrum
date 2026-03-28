@@ -1,0 +1,13 @@
+[package]
+name = "simple-mermaid"
+version = "0.5.0"
+edition = "2021"
+
+[lib]
+name = "simple_mermaid"
+path = "src/lib.rs"
+crate-type = ["rlib"]
+
+[features]
+default = ["std"]
+std = []

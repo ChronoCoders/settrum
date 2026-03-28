@@ -1,0 +1,13 @@
+[package]
+name = "railnet-api"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "railnet_api"
+path = "src/lib.rs"
+crate-type = ["rlib"]
+
+[features]
+default = ["std"]
+std = []

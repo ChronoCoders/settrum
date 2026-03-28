@@ -1,0 +1,61 @@
+# Multi-stage build for Railnet API
+
+# Stage 1: Builder
+FROM rust:1.75-slim as builder
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /railnet
+
+# Copy workspace configuration
+COPY Cargo.toml Cargo.lock ./
+
+# Copy API source
+COPY railnet-api ./railnet-api
+
+# Build API in release mode
+RUN cargo build --release -p railnet-api
+
+# Stage 2: Runtime
+FROM debian:bookworm-slim
+
+# Install runtime dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    ca-certificates \
+    libssl3 \
+    libpq5 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create railnet user
+RUN useradd -m -u 1000 -U -s /bin/sh railnet
+
+# Copy binary from builder
+COPY --from=builder /railnet/target/release/railnet-api /usr/local/bin/
+
+# Copy migrations
+COPY railnet-api/migrations /migrations
+
+# Set ownership
+RUN chown -R railnet:railnet /usr/local/bin/railnet-api /migrations
+
+# Switch to railnet user
+USER railnet
+
+# Expose API port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD ["/usr/local/bin/railnet-api", "--health-check"] || exit 1
+
+# Default command
+ENTRYPOINT ["/usr/local/bin/railnet-api"]

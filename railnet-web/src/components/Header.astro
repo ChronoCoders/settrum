@@ -1,0 +1,39 @@
+---
+const nav = [
+  { label: "Solutions", href: "/solutions" },
+  { label: "Technology", href: "/technology" },
+  { label: "Security", href: "/security" }
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-white/10 bg-rail-950/70 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+    <a href="/" class="flex items-center gap-2">
+      <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/15">
+        <span class="text-sm font-semibold tracking-wide">RN</span>
+      </span>
+      <span class="text-sm font-semibold tracking-wide">Railnet</span>
+    </a>
+
+    <nav class="hidden items-center gap-6 md:flex">
+      {nav.map((item) => (
+        <a href={item.href} class="text-sm text-white/75 hover:text-white">
+          {item.label}
+        </a>
+      ))}
+      <a
+        href="#contact"
+        class="rounded-lg bg-white px-3 py-2 text-sm font-semibold text-rail-950 hover:bg-white/90"
+      >
+        Contact
+      </a>
+    </nav>
+
+    <a
+      href="#contact"
+      class="md:hidden rounded-lg bg-white px-3 py-2 text-sm font-semibold text-rail-950 hover:bg-white/90"
+    >
+      Contact
+    </a>
+  </div>
+</header>

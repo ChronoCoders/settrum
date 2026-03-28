@@ -1,0 +1,91 @@
+---
+const bullets = [
+  "Designed for regulated environments and controlled rollouts",
+  "Clear audit trails for operations, approvals, and state changes",
+  "API-first integration with existing institutional workflows"
+];
+---
+
+<section class="relative overflow-hidden">
+  <div
+    class="absolute inset-0 bg-[radial-gradient(1200px_circle_at_20%_-10%,rgba(76,125,255,0.35),transparent_55%),radial-gradient(900px_circle_at_85%_20%,rgba(121,161,255,0.18),transparent_55%),radial-gradient(900px_circle_at_60%_110%,rgba(76,125,255,0.10),transparent_55%)]"
+  ></div>
+  <div class="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-2 md:items-center md:py-28">
+    <div class="max-w-2xl">
+      <div
+        class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-rail-400"></span>
+        Institutional settlement infrastructure
+      </div>
+
+      <h1 class="mt-6 text-4xl font-semibold tracking-tight md:text-6xl">
+        Move real-world value with predictable rules.
+      </h1>
+
+      <p class="mt-6 text-base leading-relaxed text-white/70 md:text-lg">
+        Railnet is a private network for asset and settlement workflows. Built to help institutions digitize
+        processes, coordinate participants, and keep operations compliant and auditable.
+      </p>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <a
+          href="#contact"
+          class="inline-flex items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-semibold text-rail-950 hover:bg-white/90"
+        >
+          Talk to Railnet
+        </a>
+        <a
+          href="/solutions"
+          class="inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+        >
+          Explore solutions
+        </a>
+      </div>
+
+      <ul class="mt-10 grid gap-3 text-sm text-white/70 md:grid-cols-3">
+        {bullets.map((b) => (
+          <li class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+            {b}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="relative">
+      <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <div class="flex items-center justify-between">
+          <div class="text-sm font-semibold">Railnet Network</div>
+          <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-white/70">
+            <span class="h-2 w-2 rounded-full bg-rail-400"></span>
+            Live view
+          </div>
+        </div>
+
+        <div class="mt-6 grid gap-3">
+          <div class="rounded-2xl border border-white/10 bg-rail-950/40 p-4">
+            <div class="text-xs text-white/60">Participants</div>
+            <div class="mt-1 text-lg font-semibold tracking-tight">Operators • Issuers • Auditors</div>
+            <div class="mt-2 text-xs text-white/55">Permissioned onboarding with policy-driven controls.</div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-rail-950/40 p-4">
+            <div class="text-xs text-white/60">Workflow</div>
+            <div class="mt-1 text-lg font-semibold tracking-tight">Register → Settle → Prove</div>
+            <div class="mt-2 text-xs text-white/55">Traceable actions with clear events and outcomes.</div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-rail-950/40 p-4">
+            <div class="text-xs text-white/60">Integration</div>
+            <div class="mt-1 text-lg font-semibold tracking-tight">REST APIs</div>
+            <div class="mt-2 text-xs text-white/55">Connect existing systems without rewriting everything.</div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] bg-[radial-gradient(800px_circle_at_20%_30%,rgba(76,125,255,0.25),transparent_55%),radial-gradient(650px_circle_at_85%_65%,rgba(121,161,255,0.15),transparent_55%)]"
+      ></div>
+    </div>
+  </div>
+</section>
