@@ -37,11 +37,3 @@ sp-io = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkado
 sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
 sp-core = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
 
-[patch."https://github.com/w3f/fflonk"]
-fflonk = { path = "vendor/fflonk" }
-[patch."https://github.com/w3f/ring-proof"]
-ring = { path = "vendor/ring-proof" }
-[patch."https://github.com/w3f/ring-vrf"]
-bandersnatch_vrfs = { path = "vendor/ring-vrf/bandersnatch_vrfs" }
-[patch."https://github.com/kianenigma/simple-mermaid.git"]
-simple-mermaid = { path = "vendor/simple-mermaid" }
