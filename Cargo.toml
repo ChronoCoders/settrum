@@ -1,0 +1,47 @@
+[workspace]
+resolver = "2"
+members = [
+    "railnet-node/node",
+    "railnet-node/runtime",
+    "railnet-node/pallets/operators",
+    "railnet-node/pallets/asset-registry",
+    "railnet-node/pallets/settlement-engine",
+    "railnet-node/pallets/settlement-proofs",
+    "railnet-node/pallets/cross-settlement",
+    "railnet-api",
+]
+
+[workspace.package]
+edition = "2021"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = "warn"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[profile.dev]
+incremental = false
+
+[workspace.dependencies]
+scale-info = { version = "2", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+frame-support = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
+frame-system = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
+sp-io = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
+sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
+sp-core = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
+
+[patch."https://github.com/w3f/fflonk"]
+fflonk = { path = "vendor/fflonk" }
+[patch."https://github.com/w3f/ring-proof"]
+ring = { path = "vendor/ring-proof" }
+[patch."https://github.com/w3f/ring-vrf"]
+bandersnatch_vrfs = { path = "vendor/ring-vrf/bandersnatch_vrfs" }
+[patch."https://github.com/kianenigma/simple-mermaid.git"]
+simple-mermaid = { path = "vendor/simple-mermaid" }
