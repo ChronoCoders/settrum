@@ -6,6 +6,7 @@ pub mod config;
 pub mod db;
 pub mod error;
 pub mod handlers;
+pub mod rate_limit;
 
 use std::sync::Arc;
 
