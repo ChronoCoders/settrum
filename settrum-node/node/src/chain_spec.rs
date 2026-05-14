@@ -1,5 +1,5 @@
-use settrum_runtime::{opaque::SessionKeys, AccountId, AuraId, GrandpaId, RuntimeGenesisConfig};
 use sc_service::ChainType;
+use settrum_runtime::{AccountId, AuraId, GrandpaId};
 use sp_core::{sr25519, Pair, Public};
 use sp_runtime::traits::{IdentifyAccount, Verify};
 
@@ -26,10 +26,6 @@ fn authority_keys_from_seed(seed: &str) -> (AccountId, AuraId, GrandpaId) {
         get_from_seed::<AuraId>(seed),
         get_from_seed::<GrandpaId>(seed),
     )
-}
-
-fn session_keys(aura: AuraId, grandpa: GrandpaId) -> SessionKeys {
-    SessionKeys { aura, grandpa }
 }
 
 pub fn development_config() -> Result<ChainSpec, String> {
@@ -87,17 +83,6 @@ fn testnet_genesis(
     let grandpa_authorities: Vec<(GrandpaId, u64)> = initial_authorities
         .iter()
         .map(|(_, _, grandpa)| (grandpa.clone(), 1u64))
-        .collect();
-
-    let initial_session_keys: Vec<(AccountId, AccountId, SessionKeys)> = initial_authorities
-        .iter()
-        .map(|(acc, aura, grandpa)| {
-            (
-                acc.clone(),
-                acc.clone(),
-                session_keys(aura.clone(), grandpa.clone()),
-            )
-        })
         .collect();
 
     serde_json::json!({

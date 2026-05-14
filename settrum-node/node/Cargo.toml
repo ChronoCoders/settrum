@@ -11,6 +11,10 @@ path = "src/main.rs"
 # Clap for CLI
 clap = { version = "4", features = ["derive"] }
 
+# JSON
+serde_json = { workspace = true }
+jsonrpsee = { version = "0.24", features = ["server"] }
+
 # Substrate client
 sc-basic-authorship = { workspace = true }
 sc-chain-spec = { workspace = true }
@@ -32,6 +36,7 @@ substrate-frame-rpc-system = { workspace = true }
 
 # Substrate primitives
 sp-api = { workspace = true, features = ["std"] }
+sp-blockchain = { workspace = true }
 sp-block-builder = { workspace = true, features = ["std"] }
 sp-consensus-aura = { workspace = true, features = ["std"] }
 sp-consensus-grandpa = { workspace = true, features = ["std"] }

@@ -1,12 +1,10 @@
-#![allow(clippy::all)]
-
 use futures::FutureExt;
-use settrum_runtime::{opaque::Block, RuntimeApi};
-use sc_client_api::Backend;
+use sc_client_api::{Backend, BlockBackend};
 use sc_consensus_grandpa::SharedVoterState;
 use sc_service::{error::Error as ServiceError, Configuration, TaskManager, WarpSyncConfig};
 use sc_telemetry::{Telemetry, TelemetryWorker};
 use sc_transaction_pool_api::OffchainTransactionPoolFactory;
+use settrum_runtime::{opaque::Block, RuntimeApi};
 use sp_consensus_aura::sr25519::AuthorityPair as AuraPair;
 use std::{sync::Arc, time::Duration};
 
@@ -151,7 +149,7 @@ pub fn new_full<
     let peer_store_handle = net_config.peer_store_handle();
     let grandpa_protocol_name = sc_consensus_grandpa::protocol_standard_name(
         &client
-            .block_hash(0u32.into())
+            .block_hash(0u32)
             .ok()
             .flatten()
             .expect("Genesis block exists; qed"),
