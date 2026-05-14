@@ -3,25 +3,30 @@ name = "pallet-operators"
 version = "1.0.0"
 edition = "2021"
 
-[dependencies]
-frame-support = { workspace = true, default-features = false, optional = true }
-frame-system = { workspace = true, default-features = false, optional = true }
-codec = { workspace = true, default-features = false, features = ["derive"] }
-scale-info = { workspace = true, default-features = false, features = ["derive"] }
-
-[features]
-default = ["std", "frame-support", "frame-system"]
-std = ["frame-support/std", "frame-system/std", "scale-info/std", "codec/std"]
-try-runtime = []
-
 [lib]
 name = "pallet_operators"
 path = "src/lib.rs"
 crate-type = ["rlib"]
 
+[dependencies]
+frame-support = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
+frame-system = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", default-features = false }
+codec = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale-info = { version = "2", default-features = false, features = ["derive"] }
+
 [dev-dependencies]
-sp-io = { workspace = true, features = ["std"] }
-sp-runtime = { workspace = true, features = ["std"] }
-sp-core = { workspace = true, features = ["std"] }
-frame-support = { workspace = true, features = ["std"] }
-frame-system = { workspace = true, features = ["std"] }
+sp-io = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", features = ["std"] }
+sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", features = ["std"] }
+sp-core = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", features = ["std"] }
+frame-support = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", features = ["std"] }
+frame-system = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", features = ["std"] }
+
+[features]
+default = ["std"]
+std = [
+    "frame-support/std",
+    "frame-system/std",
+    "scale-info/std",
+    "codec/std",
+]
+try-runtime = []

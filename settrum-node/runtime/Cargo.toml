@@ -45,9 +45,13 @@ pallet-settlement-engine = { path = "../pallets/settlement-engine", default-feat
 pallet-settlement-proofs = { path = "../pallets/settlement-proofs", default-features = false }
 pallet-cross-settlement = { path = "../pallets/cross-settlement", default-features = false }
 
+[build-dependencies]
+substrate-wasm-builder = { git = "https://github.com/paritytech/polkadot-sdk.git", tag = "polkadot-stable2512-3", optional = true }
+
 [features]
 default = ["std"]
 std = [
+    "substrate-wasm-builder",
     "codec/std",
     "scale-info/std",
     "sp-api/std",

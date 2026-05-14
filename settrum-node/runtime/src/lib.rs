@@ -5,9 +5,8 @@
 extern crate alloc;
 use alloc::vec::Vec;
 
-// WASM binary - set to None when not compiled via substrate-wasm-builder.
 #[cfg(feature = "std")]
-pub const WASM_BINARY: Option<&'static [u8]> = None;
+include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use frame_support::{
     construct_runtime, parameter_types,
