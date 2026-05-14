@@ -65,13 +65,15 @@ pub async fn propose(
 
     let cross = db::insert_cross_settlement(
         &state.db,
-        next_id,
-        claims.0.operator_id as i32,
-        &body.participants,
-        &legs_json,
-        reference,
-        0,
-        expires_in,
+        db::NewCrossSettlement {
+            id: next_id,
+            initiator_id: claims.0.operator_id as i32,
+            participants: &body.participants,
+            legs: &legs_json,
+            reference,
+            created_at_block: 0,
+            expires_at_block: expires_in,
+        },
     )
     .await?;
 

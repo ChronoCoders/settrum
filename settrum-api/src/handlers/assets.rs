@@ -70,15 +70,17 @@ pub async fn register(
 
     let asset = db::insert_asset(
         &state.db,
-        next_id,
-        &operator.account,
-        &body.name,
-        &body.symbol,
-        &body.asset_type,
-        body.decimals as i16,
-        "0",
-        settlement_rules,
-        0,
+        db::NewAsset {
+            id: next_id,
+            issuer: &operator.account,
+            name: &body.name,
+            symbol: &body.symbol,
+            asset_type: &body.asset_type,
+            decimals: body.decimals as i16,
+            total_supply: "0",
+            settlement_rules,
+            registered_at: 0,
+        },
     )
     .await?;
 

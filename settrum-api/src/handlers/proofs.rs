@@ -69,13 +69,15 @@ pub async fn submit(
 
     let proof = db::insert_proof(
         &state.db,
-        next_id,
-        body.settlement_id,
-        &body.proof_type,
-        &body.hash,
-        &operator.account,
-        data,
-        0,
+        db::NewProof {
+            id: next_id,
+            settlement_id: body.settlement_id,
+            proof_type: &body.proof_type,
+            hash: &body.hash,
+            submitter: &operator.account,
+            data,
+            submitted_at: 0,
+        },
     )
     .await?;
 

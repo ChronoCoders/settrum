@@ -176,32 +176,33 @@ pub async fn list_assets(pool: &PgPool) -> Result<Vec<AssetRow>, sqlx::Error> {
         .await
 }
 
-pub async fn insert_asset(
-    pool: &PgPool,
-    id: i32,
-    issuer: &str,
-    name: &str,
-    symbol: &str,
-    asset_type: &str,
-    decimals: i16,
-    total_supply: &str,
-    settlement_rules: &str,
-    registered_at: i32,
-) -> Result<AssetRow, sqlx::Error> {
+pub struct NewAsset<'a> {
+    pub id: i32,
+    pub issuer: &'a str,
+    pub name: &'a str,
+    pub symbol: &'a str,
+    pub asset_type: &'a str,
+    pub decimals: i16,
+    pub total_supply: &'a str,
+    pub settlement_rules: &'a str,
+    pub registered_at: i32,
+}
+
+pub async fn insert_asset(pool: &PgPool, a: NewAsset<'_>) -> Result<AssetRow, sqlx::Error> {
     sqlx::query_as::<_, AssetRow>(
         "INSERT INTO assets (id, issuer, name, symbol, asset_type, decimals, total_supply, settlement_rules, registered_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
          RETURNING *",
     )
-    .bind(id)
-    .bind(issuer)
-    .bind(name)
-    .bind(symbol)
-    .bind(asset_type)
-    .bind(decimals)
-    .bind(total_supply)
-    .bind(settlement_rules)
-    .bind(registered_at)
+    .bind(a.id)
+    .bind(a.issuer)
+    .bind(a.name)
+    .bind(a.symbol)
+    .bind(a.asset_type)
+    .bind(a.decimals)
+    .bind(a.total_supply)
+    .bind(a.settlement_rules)
+    .bind(a.registered_at)
     .fetch_one(pool)
     .await
 }
@@ -236,17 +237,21 @@ pub async fn list_settlements(pool: &PgPool) -> Result<Vec<SettlementRow>, sqlx:
         .await
 }
 
+pub struct NewSettlement<'a> {
+    pub id: i32,
+    pub operator_id: i32,
+    pub asset_id: i32,
+    pub operation: &'a str,
+    pub amount: &'a str,
+    pub from_account: &'a str,
+    pub to_account: &'a str,
+    pub reference: &'a str,
+    pub submitted_at: i32,
+}
+
 pub async fn insert_settlement(
     pool: &PgPool,
-    id: i32,
-    operator_id: i32,
-    asset_id: i32,
-    operation: &str,
-    amount: &str,
-    from_account: &str,
-    to_account: &str,
-    reference: &str,
-    submitted_at: i32,
+    s: NewSettlement<'_>,
 ) -> Result<SettlementRow, sqlx::Error> {
     sqlx::query_as::<_, SettlementRow>(
         "INSERT INTO settlements
@@ -254,15 +259,15 @@ pub async fn insert_settlement(
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Pending', $9)
          RETURNING *",
     )
-    .bind(id)
-    .bind(operator_id)
-    .bind(asset_id)
-    .bind(operation)
-    .bind(amount)
-    .bind(from_account)
-    .bind(to_account)
-    .bind(reference)
-    .bind(submitted_at)
+    .bind(s.id)
+    .bind(s.operator_id)
+    .bind(s.asset_id)
+    .bind(s.operation)
+    .bind(s.amount)
+    .bind(s.from_account)
+    .bind(s.to_account)
+    .bind(s.reference)
+    .bind(s.submitted_at)
     .fetch_one(pool)
     .await
 }
@@ -318,28 +323,29 @@ pub async fn get_proof_by_id(pool: &PgPool, id: i32) -> Result<Option<ProofRow>,
         .await
 }
 
-pub async fn insert_proof(
-    pool: &PgPool,
-    id: i32,
-    settlement_id: i32,
-    proof_type: &str,
-    hash: &str,
-    submitter: &str,
-    data: &str,
-    submitted_at: i32,
-) -> Result<ProofRow, sqlx::Error> {
+pub struct NewProof<'a> {
+    pub id: i32,
+    pub settlement_id: i32,
+    pub proof_type: &'a str,
+    pub hash: &'a str,
+    pub submitter: &'a str,
+    pub data: &'a str,
+    pub submitted_at: i32,
+}
+
+pub async fn insert_proof(pool: &PgPool, p: NewProof<'_>) -> Result<ProofRow, sqlx::Error> {
     sqlx::query_as::<_, ProofRow>(
         "INSERT INTO proofs (id, settlement_id, proof_type, hash, submitter, data, status, submitted_at)
          VALUES ($1, $2, $3, $4, $5, $6, 'Pending', $7)
          RETURNING *",
     )
-    .bind(id)
-    .bind(settlement_id)
-    .bind(proof_type)
-    .bind(hash)
-    .bind(submitter)
-    .bind(data)
-    .bind(submitted_at)
+    .bind(p.id)
+    .bind(p.settlement_id)
+    .bind(p.proof_type)
+    .bind(p.hash)
+    .bind(p.submitter)
+    .bind(p.data)
+    .bind(p.submitted_at)
     .fetch_one(pool)
     .await
 }
@@ -370,15 +376,19 @@ pub async fn get_cross_settlement_by_id(
         .await
 }
 
+pub struct NewCrossSettlement<'a> {
+    pub id: i32,
+    pub initiator_id: i32,
+    pub participants: &'a [i32],
+    pub legs: &'a serde_json::Value,
+    pub reference: &'a str,
+    pub created_at_block: i32,
+    pub expires_at_block: i32,
+}
+
 pub async fn insert_cross_settlement(
     pool: &PgPool,
-    id: i32,
-    initiator_id: i32,
-    participants: &[i32],
-    legs: &serde_json::Value,
-    reference: &str,
-    created_at_block: i32,
-    expires_at_block: i32,
+    c: NewCrossSettlement<'_>,
 ) -> Result<CrossSettlementRow, sqlx::Error> {
     sqlx::query_as::<_, CrossSettlementRow>(
         "INSERT INTO cross_settlements
@@ -386,13 +396,13 @@ pub async fn insert_cross_settlement(
          VALUES ($1, $2, $3, $4, ARRAY[]::integer[], $5, 'Pending', $6, $7)
          RETURNING *",
     )
-    .bind(id)
-    .bind(initiator_id)
-    .bind(participants)
-    .bind(legs)
-    .bind(reference)
-    .bind(created_at_block)
-    .bind(expires_at_block)
+    .bind(c.id)
+    .bind(c.initiator_id)
+    .bind(c.participants)
+    .bind(c.legs)
+    .bind(c.reference)
+    .bind(c.created_at_block)
+    .bind(c.expires_at_block)
     .fetch_one(pool)
     .await
 }

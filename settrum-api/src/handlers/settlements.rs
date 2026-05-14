@@ -62,15 +62,17 @@ pub async fn submit(
 
     let settlement = db::insert_settlement(
         &state.db,
-        next_id,
-        operator.id,
-        body.asset_id,
-        &body.operation,
-        &body.amount,
-        &body.from_account,
-        &body.to_account,
-        reference,
-        0,
+        db::NewSettlement {
+            id: next_id,
+            operator_id: operator.id,
+            asset_id: body.asset_id,
+            operation: &body.operation,
+            amount: &body.amount,
+            from_account: &body.from_account,
+            to_account: &body.to_account,
+            reference,
+            submitted_at: 0,
+        },
     )
     .await?;
 
