@@ -129,18 +129,16 @@ pub async fn list_operators(pool: &PgPool) -> Result<Vec<OperatorRow>, sqlx::Err
 
 pub async fn insert_operator(
     pool: &PgPool,
-    id: i32,
     account: &str,
     name: &str,
     collateral: &str,
     registered_at: i32,
 ) -> Result<OperatorRow, sqlx::Error> {
     sqlx::query_as::<_, OperatorRow>(
-        "INSERT INTO operators (id, account, name, collateral, status, settlement_count, registered_at)
-         VALUES ($1, $2, $3, $4, 'Active', 0, $5)
+        "INSERT INTO operators (account, name, collateral, status, settlement_count, registered_at)
+         VALUES ($1, $2, $3, 'Active', 0, $4)
          RETURNING *",
     )
-    .bind(id)
     .bind(account)
     .bind(name)
     .bind(collateral)
@@ -177,7 +175,6 @@ pub async fn list_assets(pool: &PgPool) -> Result<Vec<AssetRow>, sqlx::Error> {
 }
 
 pub struct NewAsset<'a> {
-    pub id: i32,
     pub issuer: &'a str,
     pub name: &'a str,
     pub symbol: &'a str,
@@ -190,11 +187,10 @@ pub struct NewAsset<'a> {
 
 pub async fn insert_asset(pool: &PgPool, a: NewAsset<'_>) -> Result<AssetRow, sqlx::Error> {
     sqlx::query_as::<_, AssetRow>(
-        "INSERT INTO assets (id, issuer, name, symbol, asset_type, decimals, total_supply, settlement_rules, registered_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        "INSERT INTO assets (issuer, name, symbol, asset_type, decimals, total_supply, settlement_rules, registered_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
          RETURNING *",
     )
-    .bind(a.id)
     .bind(a.issuer)
     .bind(a.name)
     .bind(a.symbol)
@@ -238,7 +234,6 @@ pub async fn list_settlements(pool: &PgPool) -> Result<Vec<SettlementRow>, sqlx:
 }
 
 pub struct NewSettlement<'a> {
-    pub id: i32,
     pub operator_id: i32,
     pub asset_id: i32,
     pub operation: &'a str,
@@ -255,11 +250,10 @@ pub async fn insert_settlement(
 ) -> Result<SettlementRow, sqlx::Error> {
     sqlx::query_as::<_, SettlementRow>(
         "INSERT INTO settlements
-         (id, operator_id, asset_id, operation, amount, from_account, to_account, reference, status, submitted_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Pending', $9)
+         (operator_id, asset_id, operation, amount, from_account, to_account, reference, status, submitted_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, 'Pending', $8)
          RETURNING *",
     )
-    .bind(s.id)
     .bind(s.operator_id)
     .bind(s.asset_id)
     .bind(s.operation)
@@ -324,7 +318,6 @@ pub async fn get_proof_by_id(pool: &PgPool, id: i32) -> Result<Option<ProofRow>,
 }
 
 pub struct NewProof<'a> {
-    pub id: i32,
     pub settlement_id: i32,
     pub proof_type: &'a str,
     pub hash: &'a str,
@@ -335,11 +328,10 @@ pub struct NewProof<'a> {
 
 pub async fn insert_proof(pool: &PgPool, p: NewProof<'_>) -> Result<ProofRow, sqlx::Error> {
     sqlx::query_as::<_, ProofRow>(
-        "INSERT INTO proofs (id, settlement_id, proof_type, hash, submitter, data, status, submitted_at)
-         VALUES ($1, $2, $3, $4, $5, $6, 'Pending', $7)
+        "INSERT INTO proofs (settlement_id, proof_type, hash, submitter, data, status, submitted_at)
+         VALUES ($1, $2, $3, $4, $5, 'Pending', $6)
          RETURNING *",
     )
-    .bind(p.id)
     .bind(p.settlement_id)
     .bind(p.proof_type)
     .bind(p.hash)
@@ -377,7 +369,6 @@ pub async fn get_cross_settlement_by_id(
 }
 
 pub struct NewCrossSettlement<'a> {
-    pub id: i32,
     pub initiator_id: i32,
     pub participants: &'a [i32],
     pub legs: &'a serde_json::Value,
@@ -392,11 +383,10 @@ pub async fn insert_cross_settlement(
 ) -> Result<CrossSettlementRow, sqlx::Error> {
     sqlx::query_as::<_, CrossSettlementRow>(
         "INSERT INTO cross_settlements
-         (id, initiator_id, participants, legs, approvals, reference, status, created_at_block, expires_at_block)
-         VALUES ($1, $2, $3, $4, ARRAY[]::integer[], $5, 'Pending', $6, $7)
+         (initiator_id, participants, legs, approvals, reference, status, created_at_block, expires_at_block)
+         VALUES ($1, $2, $3, ARRAY[]::integer[], $4, 'Pending', $5, $6)
          RETURNING *",
     )
-    .bind(c.id)
     .bind(c.initiator_id)
     .bind(c.participants)
     .bind(c.legs)

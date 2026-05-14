@@ -52,10 +52,6 @@ pub async fn submit(
         ));
     }
 
-    let next_id: i32 = sqlx::query_scalar("SELECT COALESCE(MAX(id) + 1, 0) FROM proofs")
-        .fetch_one(&state.db)
-        .await?;
-
     let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i32)
         .await?
         .ok_or_else(|| ApiError::NotFound("operator not found".into()))?;
@@ -70,7 +66,6 @@ pub async fn submit(
     let proof = db::insert_proof(
         &state.db,
         db::NewProof {
-            id: next_id,
             settlement_id: body.settlement_id,
             proof_type: &body.proof_type,
             hash: &body.hash,

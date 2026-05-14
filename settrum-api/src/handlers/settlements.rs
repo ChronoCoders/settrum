@@ -56,14 +56,9 @@ pub async fn submit(
         .await?
         .ok_or_else(|| ApiError::NotFound(format!("asset {} not found", body.asset_id)))?;
 
-    let next_id: i32 = sqlx::query_scalar("SELECT COALESCE(MAX(id) + 1, 0) FROM settlements")
-        .fetch_one(&state.db)
-        .await?;
-
     let settlement = db::insert_settlement(
         &state.db,
         db::NewSettlement {
-            id: next_id,
             operator_id: operator.id,
             asset_id: body.asset_id,
             operation: &body.operation,

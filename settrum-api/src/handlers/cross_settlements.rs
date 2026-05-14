@@ -56,17 +56,12 @@ pub async fn propose(
 
     let expires_in = body.expires_in_blocks.unwrap_or(100);
 
-    let next_id: i32 = sqlx::query_scalar("SELECT COALESCE(MAX(id) + 1, 0) FROM cross_settlements")
-        .fetch_one(&state.db)
-        .await?;
-
     let legs_json = serde_json::to_value(&body.legs)
         .map_err(|e| ApiError::Internal(anyhow::anyhow!("leg serialization error: {e}")))?;
 
     let cross = db::insert_cross_settlement(
         &state.db,
         db::NewCrossSettlement {
-            id: next_id,
             initiator_id: claims.0.operator_id as i32,
             participants: &body.participants,
             legs: &legs_json,

@@ -60,10 +60,6 @@ pub async fn register(
         ));
     }
 
-    let next_id: i32 = sqlx::query_scalar("SELECT COALESCE(MAX(id) + 1, 0) FROM assets")
-        .fetch_one(&state.db)
-        .await?;
-
     let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i32)
         .await?
         .ok_or_else(|| ApiError::NotFound("operator not found".into()))?;
@@ -71,7 +67,6 @@ pub async fn register(
     let asset = db::insert_asset(
         &state.db,
         db::NewAsset {
-            id: next_id,
             issuer: &operator.account,
             name: &body.name,
             symbol: &body.symbol,

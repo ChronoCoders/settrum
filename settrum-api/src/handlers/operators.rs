@@ -51,14 +51,8 @@ pub async fn register(
         ));
     }
 
-    // Get next operator ID from the DB (max existing + 1)
-    let next_id: i32 = sqlx::query_scalar("SELECT COALESCE(MAX(id) + 1, 0) FROM operators")
-        .fetch_one(&state.db)
-        .await?;
-
     let operator = db::insert_operator(
         &state.db,
-        next_id,
         &body.account,
         &body.name,
         &body.collateral,
