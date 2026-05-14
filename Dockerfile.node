@@ -1,4 +1,4 @@
-# Multi-stage build for Railnet Node
+# Multi-stage build for settrum Node
 
 # Stage 1: Builder
 FROM rust:1.75-slim as builder
@@ -16,16 +16,16 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Set working directory
-WORKDIR /railnet
+WORKDIR /settrum
 
 # Copy workspace configuration
 COPY Cargo.toml Cargo.lock ./
 
 # Copy node source
-COPY railnet-node ./railnet-node
+COPY settrum-node ./settrum-node
 
 # Build node in release mode
-RUN cargo build --release -p railnet-node
+RUN cargo build --release -p settrum-node
 
 # Stage 2: Runtime
 FROM debian:bookworm-slim
@@ -37,21 +37,21 @@ RUN apt-get update && \
     libssl3 && \
     rm -rf /var/lib/apt/lists/*
 
-# Create railnet user
-RUN useradd -m -u 1000 -U -s /bin/sh railnet
+# Create settrum user
+RUN useradd -m -u 1000 -U -s /bin/sh settrum
 
 # Copy binary from builder
-COPY --from=builder /railnet/target/release/railnet-node /usr/local/bin/
+COPY --from=builder /settrum/target/release/settrum-node /usr/local/bin/
 
 # Set ownership
-RUN chown railnet:railnet /usr/local/bin/railnet-node
+RUN chown settrum:settrum /usr/local/bin/settrum-node
 
 # Create data directory
 RUN mkdir -p /data && \
-    chown railnet:railnet /data
+    chown settrum:settrum /data
 
-# Switch to railnet user
-USER railnet
+# Switch to settrum user
+USER settrum
 
 # Expose ports
 # 30333: P2P
@@ -63,5 +63,5 @@ EXPOSE 30333 9944 9933
 VOLUME ["/data"]
 
 # Default command (can be overridden)
-ENTRYPOINT ["/usr/local/bin/railnet-node"]
+ENTRYPOINT ["/usr/local/bin/settrum-node"]
 CMD ["--dev", "--tmp", "--rpc-external", "--rpc-cors", "all"]

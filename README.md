@@ -1,16 +1,15 @@
-# Railnet
+# Settrum
 
 Settlement infrastructure for regulated financial institutions. Private Substrate blockchain with a REST API layer.
 
 ## Architecture
 
 ```
-railnet-node/
+settrum-node/
   pallets/          # 5 custom Substrate pallets
   runtime/          # Runtime integrating all pallets
   node/             # Node binary (Aura + GRANDPA)
-railnet-api/        # Actix Web REST API (PostgreSQL + Subxt)
-railnet-web/        # Frontend (Astro)
+settrum-api/        # Actix Web REST API (PostgreSQL + Subxt)
 ```
 
 ## Pallets
@@ -66,4 +65,4 @@ Services:
 
 ---
 
-Distributed Systems Labs
+Bytus Technologies

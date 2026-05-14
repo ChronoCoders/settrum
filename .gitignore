@@ -1,7 +1,7 @@
 /target/
 Cargo.lock
-railnet-web/node_modules/
-railnet-web/dist/
-railnet-web/.astro/
-railnet-web/package-lock.json
+settrum-web/node_modules/
+settrum-web/dist/
+settrum-web/.astro/
+settrum-web/package-lock.json
 mnt/

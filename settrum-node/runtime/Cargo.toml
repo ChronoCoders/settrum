@@ -1,0 +1,78 @@
+[package]
+name = "settrum-runtime"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "settrum_runtime"
+path = "src/lib.rs"
+crate-type = ["rlib", "cdylib"]
+
+[dependencies]
+codec = { workspace = true, default-features = false }
+scale-info = { workspace = true, default-features = false }
+
+# Substrate primitives
+sp-api = { workspace = true, default-features = false }
+sp-block-builder = { workspace = true, default-features = false }
+sp-consensus-aura = { workspace = true, default-features = false }
+sp-consensus-grandpa = { workspace = true, default-features = false }
+sp-core = { workspace = true, default-features = false }
+sp-genesis-builder = { workspace = true, default-features = false }
+sp-inherents = { workspace = true, default-features = false }
+sp-offchain = { workspace = true, default-features = false }
+sp-runtime = { workspace = true, default-features = false }
+sp-session = { workspace = true, default-features = false }
+sp-transaction-pool = { workspace = true, default-features = false }
+sp-version = { workspace = true, default-features = false }
+
+# Substrate frame
+frame-executive = { workspace = true, default-features = false }
+frame-support = { workspace = true, default-features = false }
+frame-system = { workspace = true, default-features = false }
+frame-system-rpc-runtime-api = { workspace = true, default-features = false }
+
+# Substrate pallets
+pallet-aura = { workspace = true, default-features = false }
+pallet-grandpa = { workspace = true, default-features = false }
+pallet-sudo = { workspace = true, default-features = false }
+pallet-timestamp = { workspace = true, default-features = false }
+
+# Custom pallets
+pallet-operators = { path = "../pallets/operators", default-features = false }
+pallet-asset-registry = { path = "../pallets/asset-registry", default-features = false }
+pallet-settlement-engine = { path = "../pallets/settlement-engine", default-features = false }
+pallet-settlement-proofs = { path = "../pallets/settlement-proofs", default-features = false }
+pallet-cross-settlement = { path = "../pallets/cross-settlement", default-features = false }
+
+[features]
+default = ["std"]
+std = [
+    "codec/std",
+    "scale-info/std",
+    "sp-api/std",
+    "sp-block-builder/std",
+    "sp-consensus-aura/std",
+    "sp-consensus-grandpa/std",
+    "sp-core/std",
+    "sp-genesis-builder/std",
+    "sp-inherents/std",
+    "sp-offchain/std",
+    "sp-runtime/std",
+    "sp-session/std",
+    "sp-transaction-pool/std",
+    "sp-version/std",
+    "frame-executive/std",
+    "frame-support/std",
+    "frame-system/std",
+    "frame-system-rpc-runtime-api/std",
+    "pallet-aura/std",
+    "pallet-grandpa/std",
+    "pallet-sudo/std",
+    "pallet-timestamp/std",
+    "pallet-operators/std",
+    "pallet-asset-registry/std",
+    "pallet-settlement-engine/std",
+    "pallet-settlement-proofs/std",
+    "pallet-cross-settlement/std",
+]
