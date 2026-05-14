@@ -9,13 +9,13 @@ use serde::Serialize;
 #[derive(Serialize)]
 struct BalanceResponse {
     account: String,
-    asset_id: i32,
+    asset_id: i64,
     balance: String,
 }
 
 pub async fn get_balance(
     state: web::Data<AppState>,
-    path: web::Path<(i32, String)>,
+    path: web::Path<(i64, String)>,
 ) -> Result<HttpResponse, ApiError> {
     let (asset_id, account) = path.into_inner();
 
@@ -30,7 +30,7 @@ pub async fn get_balance(
 
 pub async fn get_locked_balance(
     state: web::Data<AppState>,
-    path: web::Path<(i32, String)>,
+    path: web::Path<(i64, String)>,
 ) -> Result<HttpResponse, ApiError> {
     let (asset_id, account) = path.into_inner();
 

@@ -60,7 +60,7 @@ pub async fn register(
         ));
     }
 
-    let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i32)
+    let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i64)
         .await?
         .ok_or_else(|| ApiError::NotFound("operator not found".into()))?;
 
@@ -91,7 +91,7 @@ pub async fn list(state: web::Data<AppState>) -> Result<HttpResponse, ApiError> 
 
 pub async fn get(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();
     let asset = db::get_asset_by_id(&state.db, id)
@@ -102,7 +102,7 @@ pub async fn get(
 
 pub async fn update_supply(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
     body: web::Json<UpdateSupplyRequest>,
     _claims: AuthClaims,
 ) -> Result<HttpResponse, ApiError> {

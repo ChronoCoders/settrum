@@ -10,14 +10,14 @@ pub struct Claims {
     /// Account address (SS58).
     pub sub: String,
     /// Operator numeric ID.
-    pub operator_id: u32,
+    pub operator_id: u64,
     /// Expiry (UNIX seconds).
     pub exp: i64,
 }
 
 pub fn issue_token(
     account: &str,
-    operator_id: u32,
+    operator_id: u64,
     jwt_secret: &str,
     expiration_secs: u64,
 ) -> Result<String, ApiError> {

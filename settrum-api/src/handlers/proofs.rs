@@ -9,7 +9,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct SubmitProofRequest {
-    pub settlement_id: i32,
+    pub settlement_id: i64,
     pub proof_type: String,
     pub hash: String,
     pub data: Option<String>,
@@ -42,7 +42,7 @@ pub async fn submit(
         })?;
 
     // Check hash uniqueness
-    let existing: Option<i32> = sqlx::query_scalar("SELECT id FROM proofs WHERE hash = $1")
+    let existing: Option<i64> = sqlx::query_scalar("SELECT id FROM proofs WHERE hash = $1")
         .bind(&body.hash)
         .fetch_optional(&state.db)
         .await?;
@@ -52,7 +52,7 @@ pub async fn submit(
         ));
     }
 
-    let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i32)
+    let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i64)
         .await?
         .ok_or_else(|| ApiError::NotFound("operator not found".into()))?;
 
@@ -87,7 +87,7 @@ pub async fn submit(
 
 pub async fn get(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();
     let proof = db::get_proof_by_id(&state.db, id)
@@ -98,7 +98,7 @@ pub async fn get(
 
 pub async fn verify(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
     _admin: AdminKey,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();

@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Leg {
-    pub asset_id: i32,
+    pub asset_id: i64,
     pub from_account: String,
     pub to_account: String,
     pub amount: String,
@@ -17,7 +17,7 @@ pub struct Leg {
 
 #[derive(Debug, Deserialize)]
 pub struct ProposeCrossSettlementRequest {
-    pub participants: Vec<i32>,
+    pub participants: Vec<i64>,
     pub legs: Vec<Leg>,
     pub reference: Option<String>,
     pub expires_in_blocks: Option<i32>,
@@ -62,7 +62,7 @@ pub async fn propose(
     let cross = db::insert_cross_settlement(
         &state.db,
         db::NewCrossSettlement {
-            initiator_id: claims.0.operator_id as i32,
+            initiator_id: claims.0.operator_id as i64,
             participants: &body.participants,
             legs: &legs_json,
             reference,
@@ -83,7 +83,7 @@ pub async fn propose(
 
 pub async fn get(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();
     let cross = db::get_cross_settlement_by_id(&state.db, id)
@@ -94,11 +94,11 @@ pub async fn get(
 
 pub async fn approve(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
     claims: AuthClaims,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();
-    let operator_id = claims.0.operator_id as i32;
+    let operator_id = claims.0.operator_id as i64;
 
     // Check cross-settlement exists
     let cross = db::get_cross_settlement_by_id(&state.db, id)
@@ -152,7 +152,7 @@ pub async fn approve(
 
 pub async fn execute(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
     claims: AuthClaims,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();
@@ -167,7 +167,7 @@ pub async fn execute(
         )));
     }
 
-    if cross.initiator_id != claims.0.operator_id as i32 {
+    if cross.initiator_id != claims.0.operator_id as i64 {
         return Err(ApiError::Forbidden);
     }
 

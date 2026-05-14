@@ -9,7 +9,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct SubmitSettlementRequest {
-    pub asset_id: i32,
+    pub asset_id: i64,
     pub operation: String,
     pub amount: String,
     pub from_account: String,
@@ -43,7 +43,7 @@ pub async fn submit(
     }
 
     // Verify operator exists and is active
-    let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i32)
+    let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i64)
         .await?
         .ok_or_else(|| ApiError::NotFound("operator not found".into()))?;
 
@@ -88,7 +88,7 @@ pub async fn list(state: web::Data<AppState>) -> Result<HttpResponse, ApiError> 
 
 pub async fn get(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();
     let settlement = db::get_settlement_by_id(&state.db, id)
@@ -99,7 +99,7 @@ pub async fn get(
 
 pub async fn finalize(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
     _admin: AdminKey,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();

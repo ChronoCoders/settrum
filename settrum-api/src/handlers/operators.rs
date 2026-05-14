@@ -62,7 +62,7 @@ pub async fn register(
 
     let token = issue_token(
         &operator.account,
-        operator.id as u32,
+        operator.id as u64,
         &state.config.jwt_secret,
         state.config.jwt_expiration_secs,
     )?;
@@ -82,7 +82,7 @@ pub async fn list(state: web::Data<AppState>) -> Result<HttpResponse, ApiError> 
 
 pub async fn get(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
 ) -> Result<HttpResponse, ApiError> {
     let id = path.into_inner();
     let operator = db::get_operator_by_id(&state.db, id)
@@ -93,7 +93,7 @@ pub async fn get(
 
 pub async fn update_status(
     state: web::Data<AppState>,
-    path: web::Path<i32>,
+    path: web::Path<i64>,
     body: web::Json<StatusUpdateRequest>,
     _admin: AdminKey,
 ) -> Result<HttpResponse, ApiError> {
@@ -136,7 +136,7 @@ pub async fn login(
 
     let token = issue_token(
         &operator.account,
-        operator.id as u32,
+        operator.id as u64,
         &state.config.jwt_secret,
         state.config.jwt_expiration_secs,
     )?;
@@ -145,7 +145,7 @@ pub async fn login(
 }
 
 pub async fn me(state: web::Data<AppState>, claims: AuthClaims) -> Result<HttpResponse, ApiError> {
-    let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i32)
+    let operator = db::get_operator_by_id(&state.db, claims.0.operator_id as i64)
         .await?
         .ok_or_else(|| ApiError::NotFound("operator not found".into()))?;
     Ok(ok(operator))

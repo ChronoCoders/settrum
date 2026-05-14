@@ -17,7 +17,7 @@ pub async fn run_migrations(pool: &PgPool) -> Result<(), sqlx::migrate::MigrateE
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct OperatorRow {
-    pub id: i32,
+    pub id: i64,
     pub account: String,
     pub name: String,
     pub collateral: String,
@@ -30,7 +30,7 @@ pub struct OperatorRow {
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct AssetRow {
-    pub id: i32,
+    pub id: i64,
     pub issuer: String,
     pub name: String,
     pub symbol: String,
@@ -45,9 +45,9 @@ pub struct AssetRow {
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct SettlementRow {
-    pub id: i32,
-    pub operator_id: i32,
-    pub asset_id: i32,
+    pub id: i64,
+    pub operator_id: i64,
+    pub asset_id: i64,
     pub operation: String,
     pub amount: String,
     pub from_account: String,
@@ -63,15 +63,15 @@ pub struct SettlementRow {
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct BalanceRow {
     pub account: String,
-    pub asset_id: i32,
+    pub asset_id: i64,
     pub balance: String,
     pub updated_at: DateTime<Utc>,
 }
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct ProofRow {
-    pub id: i32,
-    pub settlement_id: i32,
+    pub id: i64,
+    pub settlement_id: i64,
     pub proof_type: String,
     pub hash: String,
     pub submitter: String,
@@ -85,11 +85,11 @@ pub struct ProofRow {
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct CrossSettlementRow {
-    pub id: i32,
-    pub initiator_id: i32,
-    pub participants: Vec<i32>,
+    pub id: i64,
+    pub initiator_id: i64,
+    pub participants: Vec<i64>,
     pub legs: serde_json::Value,
-    pub approvals: Vec<i32>,
+    pub approvals: Vec<i64>,
     pub reference: String,
     pub status: String,
     pub created_at_block: i32,
@@ -103,7 +103,7 @@ pub struct CrossSettlementRow {
 
 pub async fn get_operator_by_id(
     pool: &PgPool,
-    id: i32,
+    id: i64,
 ) -> Result<Option<OperatorRow>, sqlx::Error> {
     sqlx::query_as::<_, OperatorRow>("SELECT * FROM operators WHERE id = $1")
         .bind(id)
@@ -149,7 +149,7 @@ pub async fn insert_operator(
 
 pub async fn update_operator_status(
     pool: &PgPool,
-    id: i32,
+    id: i64,
     status: &str,
 ) -> Result<Option<OperatorRow>, sqlx::Error> {
     sqlx::query_as::<_, OperatorRow>(
@@ -161,7 +161,7 @@ pub async fn update_operator_status(
     .await
 }
 
-pub async fn get_asset_by_id(pool: &PgPool, id: i32) -> Result<Option<AssetRow>, sqlx::Error> {
+pub async fn get_asset_by_id(pool: &PgPool, id: i64) -> Result<Option<AssetRow>, sqlx::Error> {
     sqlx::query_as::<_, AssetRow>("SELECT * FROM assets WHERE id = $1")
         .bind(id)
         .fetch_optional(pool)
@@ -205,7 +205,7 @@ pub async fn insert_asset(pool: &PgPool, a: NewAsset<'_>) -> Result<AssetRow, sq
 
 pub async fn update_asset_supply(
     pool: &PgPool,
-    id: i32,
+    id: i64,
     total_supply: &str,
 ) -> Result<Option<AssetRow>, sqlx::Error> {
     sqlx::query_as::<_, AssetRow>(
@@ -219,7 +219,7 @@ pub async fn update_asset_supply(
 
 pub async fn get_settlement_by_id(
     pool: &PgPool,
-    id: i32,
+    id: i64,
 ) -> Result<Option<SettlementRow>, sqlx::Error> {
     sqlx::query_as::<_, SettlementRow>("SELECT * FROM settlements WHERE id = $1")
         .bind(id)
@@ -234,8 +234,8 @@ pub async fn list_settlements(pool: &PgPool) -> Result<Vec<SettlementRow>, sqlx:
 }
 
 pub struct NewSettlement<'a> {
-    pub operator_id: i32,
-    pub asset_id: i32,
+    pub operator_id: i64,
+    pub asset_id: i64,
     pub operation: &'a str,
     pub amount: &'a str,
     pub from_account: &'a str,
@@ -268,7 +268,7 @@ pub async fn insert_settlement(
 
 pub async fn finalize_settlement(
     pool: &PgPool,
-    id: i32,
+    id: i64,
     finalized_at: i32,
 ) -> Result<Option<SettlementRow>, sqlx::Error> {
     sqlx::query_as::<_, SettlementRow>(
@@ -285,7 +285,7 @@ pub async fn finalize_settlement(
 pub async fn get_balance(
     pool: &PgPool,
     account: &str,
-    asset_id: i32,
+    asset_id: i64,
 ) -> Result<Option<BalanceRow>, sqlx::Error> {
     sqlx::query_as::<_, BalanceRow>(
         "SELECT * FROM account_balances WHERE account = $1 AND asset_id = $2",
@@ -299,7 +299,7 @@ pub async fn get_balance(
 pub async fn get_locked_balance(
     pool: &PgPool,
     account: &str,
-    asset_id: i32,
+    asset_id: i64,
 ) -> Result<Option<BalanceRow>, sqlx::Error> {
     sqlx::query_as::<_, BalanceRow>(
         "SELECT * FROM locked_balances WHERE account = $1 AND asset_id = $2",
@@ -310,7 +310,7 @@ pub async fn get_locked_balance(
     .await
 }
 
-pub async fn get_proof_by_id(pool: &PgPool, id: i32) -> Result<Option<ProofRow>, sqlx::Error> {
+pub async fn get_proof_by_id(pool: &PgPool, id: i64) -> Result<Option<ProofRow>, sqlx::Error> {
     sqlx::query_as::<_, ProofRow>("SELECT * FROM proofs WHERE id = $1")
         .bind(id)
         .fetch_optional(pool)
@@ -318,7 +318,7 @@ pub async fn get_proof_by_id(pool: &PgPool, id: i32) -> Result<Option<ProofRow>,
 }
 
 pub struct NewProof<'a> {
-    pub settlement_id: i32,
+    pub settlement_id: i64,
     pub proof_type: &'a str,
     pub hash: &'a str,
     pub submitter: &'a str,
@@ -344,7 +344,7 @@ pub async fn insert_proof(pool: &PgPool, p: NewProof<'_>) -> Result<ProofRow, sq
 
 pub async fn verify_proof(
     pool: &PgPool,
-    id: i32,
+    id: i64,
     verified_at: i32,
 ) -> Result<Option<ProofRow>, sqlx::Error> {
     sqlx::query_as::<_, ProofRow>(
@@ -360,7 +360,7 @@ pub async fn verify_proof(
 
 pub async fn get_cross_settlement_by_id(
     pool: &PgPool,
-    id: i32,
+    id: i64,
 ) -> Result<Option<CrossSettlementRow>, sqlx::Error> {
     sqlx::query_as::<_, CrossSettlementRow>("SELECT * FROM cross_settlements WHERE id = $1")
         .bind(id)
@@ -369,8 +369,8 @@ pub async fn get_cross_settlement_by_id(
 }
 
 pub struct NewCrossSettlement<'a> {
-    pub initiator_id: i32,
-    pub participants: &'a [i32],
+    pub initiator_id: i64,
+    pub participants: &'a [i64],
     pub legs: &'a serde_json::Value,
     pub reference: &'a str,
     pub created_at_block: i32,
@@ -384,7 +384,7 @@ pub async fn insert_cross_settlement(
     sqlx::query_as::<_, CrossSettlementRow>(
         "INSERT INTO cross_settlements
          (initiator_id, participants, legs, approvals, reference, status, created_at_block, expires_at_block)
-         VALUES ($1, $2, $3, ARRAY[]::integer[], $4, 'Pending', $5, $6)
+         VALUES ($1, $2, $3, ARRAY[]::bigint[], $4, 'Pending', $5, $6)
          RETURNING *",
     )
     .bind(c.initiator_id)
@@ -399,8 +399,8 @@ pub async fn insert_cross_settlement(
 
 pub async fn approve_cross_settlement(
     pool: &PgPool,
-    id: i32,
-    operator_id: i32,
+    id: i64,
+    operator_id: i64,
 ) -> Result<Option<CrossSettlementRow>, sqlx::Error> {
     sqlx::query_as::<_, CrossSettlementRow>(
         "UPDATE cross_settlements
@@ -416,7 +416,7 @@ pub async fn approve_cross_settlement(
 
 pub async fn execute_cross_settlement(
     pool: &PgPool,
-    id: i32,
+    id: i64,
     executed_at_block: i32,
 ) -> Result<Option<CrossSettlementRow>, sqlx::Error> {
     sqlx::query_as::<_, CrossSettlementRow>(
