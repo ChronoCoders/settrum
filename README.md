@@ -134,6 +134,3 @@ Validator keys must be generated and injected before starting production nodes:
 - Database queries use parameterized statements throughout
 - No unsafe Rust (`#![forbid(unsafe_code)]` in every crate)
 
----
-
-© Bytus Technologies
