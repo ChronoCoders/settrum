@@ -9,6 +9,7 @@ members = [
     "settrum-node/pallets/settlement-proofs",
     "settrum-node/pallets/cross-settlement",
     "settrum-api",
+    "settrum-client",
 ]
 
 [workspace.package]

@@ -1,0 +1,16 @@
+[package]
+name = "settrum-client"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "settrum_client"
+path = "src/lib.rs"
+
+[dependencies]
+subxt = "0.50"
+subxt-signer = { version = "0.50", features = ["sr25519"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time"] }
+anyhow = "1"
+thiserror = "2"
+tracing = "0.1"
