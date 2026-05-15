@@ -2,7 +2,7 @@ use crate::error::ClientError;
 use crate::runtime::api;
 use std::time::Duration;
 use subxt::{config::PolkadotConfig, utils::H256, OnlineClient};
-use subxt_signer::sr25519::{dev, Keypair};
+use subxt_signer::sr25519::Keypair;
 
 const RECONNECT_ATTEMPTS: u32 = 5;
 const RECONNECT_BACKOFF: Duration = Duration::from_millis(500);
@@ -78,16 +78,5 @@ impl SettrumClient {
         let hash = progress.extrinsic_hash();
         tracing::info!(?hash, "register_operator submitted");
         Ok(hash)
-    }
-
-    /// Convenience: submit `register_operator` signed by the dev `Alice`
-    /// account. Intended for local testing only — never wire to a deploy.
-    pub async fn submit_register_operator_as_alice(
-        &self,
-        name: Vec<u8>,
-        collateral: u128,
-    ) -> Result<H256, ClientError> {
-        self.submit_register_operator(&dev::alice(), name, collateral)
-            .await
     }
 }
