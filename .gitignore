@@ -1,5 +1,4 @@
 /target/
-Cargo.lock
 build.log
 settrum-web/node_modules/
 settrum-web/dist/
